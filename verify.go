@@ -11,7 +11,7 @@ import (
 
 const (
 	SMTP_PORT    = "25"
-	SMTP_TIMEOUT = 30 * time.Second
+	SMTP_TIMEOUT = 45 * time.Second
 )
 
 type VerifyResult struct {
@@ -27,7 +27,11 @@ type VerifyResult struct {
 }
 
 func (self *VerifyResult) ConnectSmtp() error {
+	log.Printf("Looking up MX records for %s", self.Domain)
 	mx, err := net.LookupMX(self.Domain)
+	for _, mxRecord := range mx {
+		log.Printf("MX record: Host=%s, Pref=%d", mxRecord.Host, mxRecord.Pref)
+	}
 
 	if err != nil {
 		self.Result = "NoMxServersFound"
@@ -37,13 +41,15 @@ func (self *VerifyResult) ConnectSmtp() error {
 
 	addr := mx[0].Host + ":" + SMTP_PORT
 
+	log.Printf("Connecting to %s:%s", mx[0].Host, SMTP_PORT)
 	conn, err := net.DialTimeout("tcp", addr, SMTP_TIMEOUT)
 
 	if err != nil {
+		log.Printf("Connection error: %v", err)
 		self.Result = "ConnectionRefused"
-
 		return err
 	}
+	log.Println("Connection established")
 
 	client, err := smtp.NewClient(conn, mx[0].Host)
 

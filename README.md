@@ -14,3 +14,7 @@
 - ✅ Uses SMTP handshake without sending an actual email  
 - ✅ Detects invalid, disposable, and role-based emails  
 - ✅ Open-source and lightweight 
+
+## Acknowledgements
+
+This is a continuation of abimaelmartell's project [goverify](https://github.com/abimaelmartell/goverify).
