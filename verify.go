@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	SMTP_PORT    = "25"
+	SMTP_PORT    = "587"
 	SMTP_TIMEOUT = 45 * time.Second
 )
 
